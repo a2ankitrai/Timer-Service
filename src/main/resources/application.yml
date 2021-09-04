@@ -2,3 +2,12 @@ spring:
   data:
     mongodb:
       uri: mongodb://localhost:27017/timerService
+
+logging:
+  level:
+    root: info
+    com.ank.timer: debug
+    org:
+      springframework:
+        web:
+          client: trace

@@ -1,5 +1,6 @@
 package com.ank.timer.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Data;
 
@@ -8,6 +9,8 @@ import lombok.Data;
 public class TimerInfoResponse {
 
     String id;
-    long timeLeft;
+
+    @JsonProperty("time_left")
+    Long timeLeft;
 
 }

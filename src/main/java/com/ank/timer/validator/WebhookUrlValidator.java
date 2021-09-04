@@ -1,5 +1,6 @@
 package com.ank.timer.validator;
 
+import com.ank.timer.validator.annotation.Url;
 import org.apache.commons.validator.routines.UrlValidator;
 
 import javax.validation.ConstraintValidator;

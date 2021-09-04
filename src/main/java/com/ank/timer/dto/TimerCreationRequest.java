@@ -1,27 +1,45 @@
 package com.ank.timer.dto;
 
-import com.ank.timer.validator.Url;
+import com.ank.timer.validator.annotation.Numeric;
+import com.ank.timer.validator.annotation.Url;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PositiveOrZero;
+import java.io.Serializable;
 
 @Data
-public class TimerCreationRequest {
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class TimerCreationRequest implements Serializable {
 
-    @NotNull
-    @Min(0)
-    private long hours;
+//    @NotNull
+//    @Numeric
+//    @PositiveOrZero
+    @JsonProperty("hours")
+    private String hours;
 
-    @NotNull
-    @Min(0)
-    private long minutes;
+//    @NotNull
+//    @Numeric
+//    @PositiveOrZero
+@JsonProperty("minutes")
+    private String minutes;
 
-    @NotNull
-    @Min(0)
-    private long seconds;
+//    @NotNull
+//    @Numeric
+//    @PositiveOrZero
+@JsonProperty("seconds")
+    private String seconds;
 
-    @NotNull
-    @Url
+//    @NotNull
+//    @Url
+@JsonProperty("url")
     private String url;
 }

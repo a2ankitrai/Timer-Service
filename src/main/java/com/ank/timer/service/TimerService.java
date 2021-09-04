@@ -8,12 +8,14 @@ import com.ank.timer.model.State;
 import com.ank.timer.model.Timer;
 import com.ank.timer.repository.TimerRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class TimerService {
 
@@ -22,7 +24,9 @@ public class TimerService {
     public TimerCreationResponse createTimer(TimerCreationRequest request) {
 
         Timer timer = mapTimerCreationRequest(request);
+
         timer = timerRepository.save(timer);
+        log.debug("Persisted new timer with id : " + timer.getId().toString());
 
         return TimerCreationResponse.builder()
                                     .id(timer.getId().toString())
@@ -30,6 +34,9 @@ public class TimerService {
     }
 
     public TimerInfoResponse findTimerInfo(String timerId) {
+
+        if (!ObjectId.isValid(timerId))
+            throw new TimerNotFoundException();
 
         Optional<Timer> timer = timerRepository.findTimerById(new ObjectId(timerId));
 
@@ -40,9 +47,9 @@ public class TimerService {
     private Timer mapTimerCreationRequest(TimerCreationRequest request) {
 
         Timer timer = Timer.builder()
-                           .hours(request.getHours())
-                           .minutes(request.getMinutes())
-                           .seconds(request.getSeconds())
+                           .hours(Long.parseLong(request.getHours()))
+                           .minutes(Long.parseLong(request.getMinutes()))
+                           .seconds(Long.parseLong(request.getSeconds()))
                            .webhookUrl(request.getUrl())
                            .build();
 
@@ -62,12 +69,12 @@ public class TimerService {
                                                        .build();
 
         if (timer.getTimerState() == State.EXPIRED) {
-            timerInfo.setTimeLeft(0);
+            timerInfo.setTimeLeft(0L);
         } else {
             long currentTime = System.currentTimeMillis();
             long timerTriggerTimestamp = timer.getTriggerTimeStamp();
-            long diffInSeconds = (currentTime - timerTriggerTimestamp) / 1000;
-            timerInfo.setTimeLeft(diffInSeconds);
+            long diffInSeconds = (timerTriggerTimestamp - currentTime) / 1000;
+            timerInfo.setTimeLeft(diffInSeconds > 0 ? diffInSeconds : 0L);
         }
 
         return timerInfo;
