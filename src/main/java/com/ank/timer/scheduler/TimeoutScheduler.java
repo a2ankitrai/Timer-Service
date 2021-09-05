@@ -1,10 +1,12 @@
 package com.ank.timer.scheduler;
 
-import com.ank.timer.service.TimerService;
+import com.ank.timer.service.TimerProcessService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+
+import java.time.LocalDateTime;
 
 /***
  *
@@ -19,10 +21,11 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class TimeoutScheduler {
 
-    private final TimerService timerService;
+    private final TimerProcessService timerProcessService;
 
-    @Scheduled(cron = "")
-    public void processTimers(){
-
+    @Scheduled(cron = "${timer-scheduler.cron}")
+    public void processTimers() {
+        log.debug("Triggering scheduler at " + LocalDateTime.now());
+        timerProcessService.processTimers();
     }
 }

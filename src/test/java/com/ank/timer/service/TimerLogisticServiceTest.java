@@ -14,11 +14,11 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
-public class TimerServiceTest {
+public class TimerLogisticServiceTest {
 
     private static final String SOME_URL = "https://www.google.com";
     @Autowired
-    private TimerService timerService;
+    private TimerLogisticService timerService;
     @Autowired
     private TimerRepository timerRepository;
 

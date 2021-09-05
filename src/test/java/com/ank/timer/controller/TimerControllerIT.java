@@ -9,7 +9,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -31,6 +30,7 @@ public class TimerControllerIT {
     @Autowired
     private TimerRepository timerRepository;
 
+    private final ObjectMapper mapper = new ObjectMapper();
     @BeforeEach
     public void setup() {
         timerRepository.deleteAll();
@@ -46,11 +46,9 @@ public class TimerControllerIT {
                                                                         .url(SOME_URL)
                                                                         .build();
 
-        ObjectMapper mapper = new ObjectMapper();
-        var requestString = mapper.writeValueAsString(timerCreationRequest);
         var headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<TimerCreationRequest> request = new HttpEntity<>(timerCreationRequest, headers);
+        HttpEntity<String> request = new HttpEntity<>(mapper.writeValueAsString(timerCreationRequest), headers);
 
         ResponseEntity<Object> response = restTemplate.exchange(TIMER_PATH, HttpMethod.POST,
                                                                 new HttpEntity<>(request),

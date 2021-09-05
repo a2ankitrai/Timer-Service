@@ -3,7 +3,7 @@ package com.ank.timer.controller;
 import com.ank.timer.dto.TimerCreationRequest;
 import com.ank.timer.dto.TimerCreationResponse;
 import com.ank.timer.dto.TimerInfoResponse;
-import com.ank.timer.service.TimerService;
+import com.ank.timer.service.TimerLogisticService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +19,7 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 public class TimerController {
 
-    private final TimerService timerService;
+    private final TimerLogisticService timerService;
 
     @PostMapping("/timers")
     public ResponseEntity<TimerCreationResponse> createTimer(

@@ -17,7 +17,7 @@ import java.util.Optional;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class TimerService {
+public class TimerLogisticService {
 
     private final TimerRepository timerRepository;
 
@@ -53,9 +53,9 @@ public class TimerService {
                            .webhookUrl(request.getUrl())
                            .build();
 
-        long currentTime = System.currentTimeMillis();
+        long currentTime = System.currentTimeMillis() / 1000;
         long timerInSeconds = timer.getHours() * 60 + timer.getMinutes() * 60 + timer.getSeconds();
-        long triggerTimestamp = currentTime + (timerInSeconds * 1000);
+        long triggerTimestamp = currentTime + timerInSeconds;
 
         timer.setTriggerTimeStamp(triggerTimestamp);
         timer.setTimerState(State.ACTIVE);
@@ -71,9 +71,9 @@ public class TimerService {
         if (timer.getTimerState() == State.EXPIRED) {
             timerInfo.setTimeLeft(0L);
         } else {
-            long currentTime = System.currentTimeMillis();
+            long currentTime = System.currentTimeMillis() / 1000;
             long timerTriggerTimestamp = timer.getTriggerTimeStamp();
-            long diffInSeconds = (timerTriggerTimestamp - currentTime) / 1000;
+            long diffInSeconds = timerTriggerTimestamp - currentTime;
             timerInfo.setTimeLeft(diffInSeconds > 0 ? diffInSeconds : 0L);
         }
 
