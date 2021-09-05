@@ -1,6 +1,8 @@
 package com.ank.timer.controller;
 
 import com.ank.timer.dto.TimerCreationRequest;
+import com.ank.timer.dto.TimerCreationResponse;
+import com.ank.timer.dto.TimerInfoResponse;
 import com.ank.timer.repository.TimerRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
@@ -8,13 +10,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+
+import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -22,15 +21,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class TimerControllerIT {
 
     private static final String SOME_URL = "https://www.google.com";
-    static String TIMER_PATH = "/timers";
-
+    private final ObjectMapper mapper = new ObjectMapper();
     @Autowired
-    private TestRestTemplate restTemplate;
-
+    private TimerController timerController;
     @Autowired
     private TimerRepository timerRepository;
 
-    private final ObjectMapper mapper = new ObjectMapper();
     @BeforeEach
     public void setup() {
         timerRepository.deleteAll();
@@ -46,18 +42,30 @@ public class TimerControllerIT {
                                                                         .url(SOME_URL)
                                                                         .build();
 
-        var headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<String> request = new HttpEntity<>(mapper.writeValueAsString(timerCreationRequest), headers);
-
-        ResponseEntity<Object> response = restTemplate.exchange(TIMER_PATH, HttpMethod.POST,
-                                                                new HttpEntity<>(request),
-                                                                Object.class);
+        ResponseEntity<TimerCreationResponse> response = timerController.createTimer(timerCreationRequest);
 
         assertThat(response).isNotNull();
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-
     }
 
+    @Test
+    @SneakyThrows
+    public void shouldGetTimerInfo() {
+        TimerCreationRequest timerCreationRequest = TimerCreationRequest.builder()
+                                                                        .hours("1")
+                                                                        .minutes("2")
+                                                                        .seconds("3")
+                                                                        .url(SOME_URL)
+                                                                        .build();
+
+        ResponseEntity<TimerCreationResponse> response = timerController.createTimer(timerCreationRequest);
+
+        String timerId = Objects.requireNonNull(response.getBody()).getId();
+
+        ResponseEntity<TimerInfoResponse> timerInfoResponse = timerController.getTimerInfo(timerId);
+
+        assertThat(timerInfoResponse).isNotNull();
+        assertThat(timerInfoResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
+    }
 
 }

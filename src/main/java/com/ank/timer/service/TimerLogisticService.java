@@ -54,7 +54,7 @@ public class TimerLogisticService {
                            .build();
 
         long currentTime = System.currentTimeMillis() / 1000;
-        long timerInSeconds = timer.getHours() * 60 + timer.getMinutes() * 60 + timer.getSeconds();
+        long timerInSeconds = timer.getHours() * 3600 + timer.getMinutes() * 60 + timer.getSeconds();
         long triggerTimestamp = currentTime + timerInSeconds;
 
         timer.setTriggerTimeStamp(triggerTimestamp);

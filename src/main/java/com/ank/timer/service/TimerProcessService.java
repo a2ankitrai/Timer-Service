@@ -23,7 +23,9 @@ public class TimerProcessService {
     public void processTimers() {
 
         long currentTime = System.currentTimeMillis() / 1000;
-        List<Timer> timerList = timerRepository.findTimersByTriggerTimeStampAndTimerState(currentTime, State.ACTIVE);
+        List<Timer> timerList =
+                timerRepository
+                        .findTimersByTriggerTimeStampIsLessThanEqualAndTimerState(currentTime, State.ACTIVE);
 
         if (timerList.isEmpty())
             return;

@@ -20,26 +20,26 @@ import java.io.Serializable;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class TimerCreationRequest implements Serializable {
 
-//    @NotNull
-//    @Numeric
-//    @PositiveOrZero
+    @NotNull
+    @Numeric
+    @PositiveOrZero
     @JsonProperty("hours")
     private String hours;
 
-//    @NotNull
-//    @Numeric
-//    @PositiveOrZero
-@JsonProperty("minutes")
+    @NotNull
+    @Numeric
+    @PositiveOrZero
+    @JsonProperty("minutes")
     private String minutes;
 
-//    @NotNull
-//    @Numeric
-//    @PositiveOrZero
-@JsonProperty("seconds")
+    @NotNull
+    @Numeric
+    @PositiveOrZero
+    @JsonProperty("seconds")
     private String seconds;
 
-//    @NotNull
-//    @Url
-@JsonProperty("url")
+    @NotNull
+    @Url
+    @JsonProperty("url")
     private String url;
 }

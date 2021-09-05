@@ -14,7 +14,7 @@ public interface TimerRepository extends MongoRepository<Timer, ObjectId> {
 
     Optional<Timer> findTimerById(ObjectId id);
 
-    List<Timer> findTimersByTriggerTimeStampAndTimerState(long triggerTimeStamp, State timerState);
+    List<Timer> findTimersByTriggerTimeStampIsLessThanEqualAndTimerState(long triggerTimeStamp, State timerState);
 
     default Optional<Timer> findTimerById(String id) {
         return findTimerById(new ObjectId(id));
